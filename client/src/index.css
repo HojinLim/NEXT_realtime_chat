@@ -14,3 +14,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.modal-btn {
+  @apply fixed border border-black flex bg-white rounded-lg p-4 shadow-md flex-col items-center justify-center;
+}

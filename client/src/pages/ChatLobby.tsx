@@ -1,4 +1,4 @@
-//
+// ERROR : 공사중.. ㅎㅎ
 import React, { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
@@ -13,59 +13,59 @@ import Chat from "../components/Chat";
 type Props = {};
 
 const ChatLobby = (props: Props) => {
-  const [socket, setSocket] = useState<Socket<
-    ServerToClientEvents,
-    ClientToServerEvents
-  > | null>(null);
-  const navi = useNavigate();
-  const [room, setRoom] = useState<string>("");
-  const [rooms, setRooms] = useState<string[]>([]);
-  const user = useSelector((state: UserState) => state);
+  // const [socket, setSocket] = useState<Socket<
+  //   ServerToClientEvents,
+  //   ClientToServerEvents
+  // > | null>(null);
+  // const navi = useNavigate();
+  // const [room, setRoom] = useState<string>("");
+  // const [rooms, setRooms] = useState<string[]>([]);
+  // const user = useSelector((state: UserState) => state);
 
-  useEffect(() => {
-    const newSocket = io("http://localhost:3000");
-    setSocket(newSocket);
+  // useEffect(() => {
+  //   const newSocket = io("http://localhost:3000");
+  //   setSocket(newSocket);
 
-    return () => {
-      newSocket.disconnect(); // Disconnect socket when component unmounts
-    };
-  }, [room, rooms]);
+  //   return () => {
+  //     newSocket.disconnect(); // Disconnect socket when component unmounts
+  //   };
+  // }, [room, rooms]);
 
-  useEffect(() => {
-    if (socket) {
-      socket.on("sendRoomLists", (data) => {
-        setRooms(data.rooms);
-      });
+  // useEffect(() => {
+  //   if (socket) {
+  //     socket.on("sendRoomLists", (data) => {
+  //       setRooms(data.rooms);
+  //     });
 
-      socket.on("notifyEnterRoom", (data) => {
-        console.log(`Entered room: ${data.room}`); // 참가한 방 이름 출력
-      });
-    }
+  //     socket.on("notifyEnterRoom", (data) => {
+  //       console.log(`Entered room: ${data.room}`); // 참가한 방 이름 출력
+  //     });
+  //   }
 
-    return () => {
-      if (socket) {
-        socket.off("sendRoomLists");
-      }
-    };
-  }, [socket]);
+  //   return () => {
+  //     if (socket) {
+  //       socket.off("sendRoomLists");
+  //     }
+  //   };
+  // }, [socket]);
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  // const handleSubmit = (event: React.FormEvent) => {
+  //   event.preventDefault();
 
-    socket?.emit("createRoom", { room });
-    socket?.on("error_roomExist", (data) => {
-      toast.error(data.msg);
-    });
-  };
-  //   방 입장 알림
-  const enterRoom = (room: string) => {
-    socket?.emit("notifyEnterRoom", { name: user.name, room });
-    navi(`/room/${room}`);
-  };
+  //   socket?.emit("createRoom", { room });
+  //   socket?.on("error_roomExist", (data) => {
+  //     toast.error(data.msg);
+  //   });
+  // };
+  // //   방 입장 알림
+  // const enterRoom = (room: string) => {
+  //   socket?.emit("notifyEnterRoom", { name: user.name, room });
+  //   navi(`/room/${room}`);
+  // };
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-200">
-      <button
+      {/* <button
         onClick={handleSubmit}
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       >
@@ -90,7 +90,7 @@ const ChatLobby = (props: Props) => {
           </div>
         ))}
         <Chat />
-      </div>
+      </div> */}
     </div>
   );
 };

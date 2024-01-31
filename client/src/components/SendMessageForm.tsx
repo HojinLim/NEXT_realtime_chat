@@ -1,31 +1,30 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 
-const URL = "http://localhost:3000";
-const socket = io(URL);
+// const URL = "http://localhost:3000";
+// const socket = io(URL);
 
 const SendMessageForm: React.FC = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
-    socket.on("chat message", (message: string) => {
-      setMessages((messages) => [...messages, message]);
-    });
-    // socket.io.on("ping", () => {
-    //   console.log("ping");
-    // });
-  }, []);
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    socket.emit("chat message", message);
-    setMessage("");
-  };
+    //   socket.on("chat message", (message: string) => {
+    //     setMessages((messages) => [...messages, message]);
+    //   });
+    //   // socket.io.on("ping", () => {
+    //   //   console.log("ping");
+    //   // });
+    // }, []);
+    // const handleSubmit = (event: React.FormEvent) => {
+    //   event.preventDefault();
+    //   socket.emit("chat message", message);
+    //   setMessage("");
+  });
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className="flex items-center">
+      {/* <form onSubmit={handleSubmit} className="flex items-center">
         <input
           type="text"
           value={message}
@@ -44,7 +43,7 @@ const SendMessageForm: React.FC = () => {
         {messages.map((message, index) => (
           <li key={index}>{message}</li>
         ))}
-      </ul>
+      </ul> */}
     </div>
   );
 };
