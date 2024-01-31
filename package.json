@@ -12,10 +12,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@socket.io/admin-ui": "^0.5.1",
     "concurrently": "^8.2.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.1",
     "express": "^4.18.2",
     "http": "^0.0.1-security",
+    "i": "^0.3.7",
     "nodemon": "^3.0.3",
+    "npm": "^10.4.0",
     "socket.io": "^4.7.4"
   },
   "devDependencies": {
