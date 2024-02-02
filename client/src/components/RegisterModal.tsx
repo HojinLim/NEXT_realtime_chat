@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { AppDispatch } from "../redux/store";
-import { signup } from "../redux/slices/authSlice";
+import { AppDispatch, RootState } from "../redux/store";
+import { AuthState, register } from "../redux/slices/authSlice";
+import { useSelector } from "react-redux";
 
 const RegisterModal = ({
   handleSignUpOpen,
@@ -16,14 +17,18 @@ const RegisterModal = ({
   };
   const dispatch = useDispatch<AppDispatch>();
   const [data, setData] = useState(initialState);
+  const { message, isLoading, isSuccess } = useSelector(
+    (state: RootState) => state.auth
+  );
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (data.password !== data.confirmpass) {
       toast.error("Your password doesn't match!");
       return;
     }
-    dispatch(signup(data));
-    alert("회원가입이 완료되었습니다.");
+    dispatch(register(data));
+
+    // alert("회원가입이 완료되었습니다.");
     handleSignUpOpen();
   };
 

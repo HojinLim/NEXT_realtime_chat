@@ -9,6 +9,6 @@
     "outDir": "./dist",
     "moduleResolution": "node" // 추가된 줄
   },
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", "../client/setupProxy.ts"],
   "exclude": ["node_modules"]
 }

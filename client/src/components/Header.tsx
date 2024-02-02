@@ -1,16 +1,49 @@
-import React from "react";
-// import SendMessageForm from "./SendMessageForm";
 import { useSelector } from "react-redux";
-import { UserState } from "../redux/slices/userSlice";
+import { AppDispatch, RootState } from "../redux/store";
+import { logout } from "../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-type Props = {};
+const Header = () => {
+  const user = useSelector((state: RootState) => state.auth.user);
+  const dispatch = useDispatch<AppDispatch>();
+  const navi = useNavigate();
 
-const Header = (props: Props) => {
-  const user = useSelector((state: UserState) => state);
+  const handleLogout = () => {
+    // 로그아웃 처리 로직
+    dispatch(logout());
+  };
+  const goMyPage = () => {
+    navi("/mypage");
+  };
   return (
-    <div className="bg-blue-500 p-4" id="hi">
-      {user.name && <div>{`Hi! ${user.name}`}</div>}
-      <h1 className="text-white text-center">Header</h1>
+    <div className="flex justify-between items-center bg-blue-500 p-4 text-center">
+      {user! ? (
+        <div
+          className="text-white hover:cursor-pointer hover:text-blue-300 hover:underline"
+          onClick={goMyPage}
+        >
+          Hi, {user?.name}
+        </div>
+      ) : (
+        <div className="text-white">No user</div>
+      )}
+      <h1
+        onClick={() => navi("/")}
+        className="text-white flex-grow text-center hover:cursor-pointer hover:text-blue-300 hover:underline"
+      >
+        Header
+      </h1>
+      <div>
+        {user! && (
+          <button
+            onClick={handleLogout}
+            className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded"
+          >
+            Logout
+          </button>
+        )}
+      </div>
     </div>
   );
 };

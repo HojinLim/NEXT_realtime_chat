@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import { UserState } from "../redux/slices/userSlice";
+
 import Chat from "../components/Chat";
 
 type Props = {};

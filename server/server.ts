@@ -15,7 +15,8 @@ const app = express();
 app.use(cors());
 const server = createServer(app);
 
-// json 형태의 데이터를 해석- body-parser 기능 포함
+// body 데이터를 json형식으로 사용:
+//json 형태의 데이터를 해석- body-parser 기능 포함
 app.use(express.json());
 // x-www-form-urlencoded 형태 데이터 해석
 app.use(express.urlencoded({ extended: false }));
