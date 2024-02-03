@@ -10,16 +10,12 @@ import { useSelector } from "react-redux";
 
 const Landing = () => {
   const user = useSelector((state: RootState) => state.auth.user);
-  const [name, setName] = useState("");
+
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [reigisterModal, setRegisterModal] = useState(false);
 
   const [isUser, setIsUser] = useState<boolean>(false);
-
-  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
-  };
 
   const handleClose = () => {
     setShowModal((prev) => !prev);
@@ -50,9 +46,7 @@ const Landing = () => {
       )}
       {showModal && (
         <LoginModal
-          handleNameChange={handleNameChange}
           handleClose={handleClose}
-          name={name}
           showSignupModal={showSignupModal}
         />
       )}

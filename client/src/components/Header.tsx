@@ -11,7 +11,7 @@ const Header = () => {
 
   const handleLogout = () => {
     // 로그아웃 처리 로직
-    dispatch(logout());
+    dispatch(logout(navi));
   };
   const goMyPage = () => {
     navi("/mypage");

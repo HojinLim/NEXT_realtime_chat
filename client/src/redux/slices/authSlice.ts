@@ -2,12 +2,14 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FormData, User } from "../../types/auth";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { NavigateFunction, Navigation } from "react-router-dom";
+import { NavigateFunction } from "react-router-dom";
 
-const user = JSON.parse(localStorage.getItem("user")!) as User | null;
+let user = null;
+if (localStorage.getItem("user") !== "undefined") {
+  user = JSON.parse(localStorage.getItem("user") || "null") as User | null;
+}
 
 const token = localStorage.getItem("token");
-
 if (token) {
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 } else {
@@ -35,20 +37,25 @@ const initialState: AuthState = {
   message: "",
 };
 
+const initAuthInfo = () => {
+  localStorage.removeItem("user");
+  localStorage.removeItem("token");
+  localStorage.removeItem("refreshToken");
+  delete axios.defaults.headers.common["Authorization"];
+};
+
 // createAsyncThunk를 사용하여 백엔드에 회원가입 요청을 보내는 비동기 액션을 생성.
 export const register = createAsyncThunk(
   "auth/register",
   async (formData: FormData, thunkAPI) => {
     try {
       const response = await axios.post("/api/auth/register", formData);
-
+      toast.success(response.data.message);
       return thunkAPI.fulfillWithValue(response.data);
     } catch (error: any) {
       if (error.response) {
         // 서버가 응답을 반환한 경우
-
         toast.error(error.response.data.error);
-        // console.log(error.response.status); // 400
       } else if (error.request) {
         // 요청이 만들어졌지만, 응답이 없는 경우
         console.log(error.request);
@@ -60,13 +67,14 @@ export const register = createAsyncThunk(
     }
   }
 );
+
 // Login user
 export const login = createAsyncThunk(
   "auth/login",
   async (formData: FormData, thunkAPI) => {
     try {
       const response = await axios.post("/api/auth/login", formData);
-
+      toast.success(response.data.success);
       if (response.data) {
         // user { name: "user", ... }
         localStorage.setItem("user", JSON.stringify(response.data.user));
@@ -79,14 +87,15 @@ export const login = createAsyncThunk(
           "refreshToken",
           response.headers["x-refresh-token"]
         );
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${response.headers["x-auth-token"]}`;
 
       return thunkAPI.fulfillWithValue(response.data);
     } catch (error: any) {
       if (error.response) {
         // 서버가 응답을 반환한 경우
-
         toast.error(error.response.data.error);
-        // console.log(error.response.status); // 400
       } else if (error.request) {
         // 요청이 만들어졌지만, 응답이 없는 경우
         console.log(error.request);
@@ -98,12 +107,15 @@ export const login = createAsyncThunk(
     }
   }
 );
-export const logout = createAsyncThunk("auth/logout", async () => {
-  localStorage.removeItem("user");
-  localStorage.removeItem("token");
-  localStorage.removeItem("refreshToken");
-  delete axios.defaults.headers.common["Authorization"];
-});
+
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (navi: NavigateFunction) => {
+    initAuthInfo();
+    init();
+    navi("/");
+  }
+);
 
 export const deleteUser = createAsyncThunk(
   "auth/deleteUser",
@@ -112,7 +124,7 @@ export const deleteUser = createAsyncThunk(
       const response = await axios.post("/api/auth/delete");
       navi("/");
       toast.success(response.data.message);
-
+      initAuthInfo();
       init();
 
       return response.data;
@@ -120,7 +132,6 @@ export const deleteUser = createAsyncThunk(
       if (error.response) {
         // 서버가 응답을 반환한 경우
         toast.error(error.response.data.error);
-        // console.log(error.response.status); // 400
       } else if (error.request) {
         // 요청이 만들어졌지만, 응답이 없는 경우
         console.log(error.request);
@@ -131,8 +142,8 @@ export const deleteUser = createAsyncThunk(
     }
   }
 );
-// createSlice에서 이 비동기 액션을 처리
 
+// createSlice에서 이 비동기 액션을 처리
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -146,7 +157,6 @@ export const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(register.fulfilled, (state, action: PayloadAction<FormData>) => {
-        // state.user = action.payload.;
         state.formData = action.payload;
       })
       .addCase(register.rejected, (state, action: PayloadAction<unknown>) => {

@@ -5,19 +5,20 @@ import { login } from "../redux/slices/authSlice";
 import { useSelector } from "react-redux";
 
 const LoginModal = ({
-  handleNameChange,
   handleClose,
-  name,
   showSignupModal: handleSignUp,
 }: {
-  handleNameChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleClose: () => void;
   showSignupModal: () => void;
-  name: string;
 }) => {
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.auth);
+
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value);
+  };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
