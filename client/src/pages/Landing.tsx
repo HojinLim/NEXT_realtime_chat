@@ -7,6 +7,7 @@ import LoginModal from "../components/LoginModal";
 import RegisterModal from "../components/RegisterModal";
 import { login } from "../redux/slices/authSlice";
 import { useSelector } from "react-redux";
+import ChatLobby from "./ChatLobby";
 
 const Landing = () => {
   const user = useSelector((state: RootState) => state.auth.user);
@@ -33,7 +34,7 @@ const Landing = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-200">
       <h1 className="text-5xl text-blue-500">Chat!</h1>
-      {!user && (
+      {!user ? (
         <button
           onClick={() => {
             setIsUser(true);
@@ -42,6 +43,15 @@ const Landing = () => {
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
         >
           로그인
+        </button>
+      ) : (
+        <button
+          onClick={() => {
+            navigate("/room");
+          }}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+        >
+          GO TO Chat
         </button>
       )}
       {showModal && (
@@ -52,6 +62,7 @@ const Landing = () => {
       )}
 
       {reigisterModal && <RegisterModal handleSignUpOpen={showSignupModal} />}
+
     </div>
   );
 };

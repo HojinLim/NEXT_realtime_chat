@@ -1,10 +1,9 @@
 import express from "express";
 import { createServer } from "http";
-
+import { Server } from "socket.io";
+import { ClientToServerEvents, Message, ServerToClientEvents } from "../typings";
 import dotenv from "dotenv";
 import cors from "cors";
-
-// routes
 import AuthRoute from "./routes/AuthRoute";
 import mongoose from "mongoose";
 
@@ -12,13 +11,9 @@ dotenv.config();
 const PORT = process.env.PORT || 5000;
 
 const app = express();
+const httpServer = createServer(app);
 app.use(cors());
-const server = createServer(app);
-
-// body 데이터를 json형식으로 사용:
-//json 형태의 데이터를 해석- body-parser 기능 포함
 app.use(express.json());
-// x-www-form-urlencoded 형태 데이터 해석
 app.use(express.urlencoded({ extended: false }));
 
 const MONGO_KEY = process.env.MONGO_URI!;
@@ -29,55 +24,31 @@ mongoose
 
 app.use("/api/auth", AuthRoute);
 
-server.listen(PORT, () => {
-  console.log(`listening on *:${PORT}`);
+const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
+  cors: {
+    methods: ["GET", "POST"],
+    origin: '*',
+  }
 });
 
-// let rooms: string[] = [];
+// const chatRoom = io.of("/chatRoom");
+io.on('connection', socket => {
 
-// const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
-//   cors: {
-//     // origin: ["http://localhost:3000/"],
-//     origin: "*",
-//     methods: ["GET", "POST"],
-//     credentials: true,
-//   },
+
+  console.log('a user connected, socket id:', socket.id);
+
+  socket.on('clientMsg', (msg: string) => {
+    console.log('Server got message: ' + msg);
+    io.emit('serverMsg', msg);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
+
+
+httpServer.listen(5000);
+// server.listen(PORT, () => {
+//   console.log(`listening on *:${PORT}`);
 // });
-
-// instrument(io, {
-//   auth: false,
-//   // mode: "development",
-// });
-// io.on(
-//   "connection",
-//   (socket: Socket<ClientToServerEvents, ServerToClientEvents>) => {
-//     //  방 생성
-//     socket.on("createRoom", (data) => {
-//       console.log(data.room);
-//       if (rooms.includes(data.room)) {
-//         console.log("Room name is already exist");
-//         socket.emit("error_roomExist", { msg: "Room name is already exist" });
-//         return;
-//       }
-//       console.log(data.room);
-//       rooms.push(data.room);
-//       if (!data.room) {
-//         // throw new Error("Room name is required");
-//       } else {
-//         io.emit("sendRoomLists", { rooms });
-//       }
-//     });
-//     socket.on("notifyEnterRoom", (data) => {
-//       console.log("you joined", data.room);
-//       socket.join(data.room);
-//       socket.emit("notifyEnterRoom", {
-//         name: data.name,
-//         room: data.room,
-//       });
-//     });
-
-//     socket.on("disconnect", () => {
-//       console.log("user disconnected");
-//     });
-//   }
-// );

@@ -33,9 +33,7 @@ const protect = expressAsyncHandler(
         console.log(error);
         res.status(401).json({ error: "Not authorized, token failed" });
       }
-    }
-
-    if (!token) {
+    } else {
       // Check for refresh token
 
       const refreshToken = localStorage.getItem("refreshToken");

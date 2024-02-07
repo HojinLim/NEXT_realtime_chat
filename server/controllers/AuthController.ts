@@ -19,11 +19,7 @@ export const registerUser = async (req: Request, res: Response) => {
     if (oldUser) return res.status(400).json({ error: "User already exists" });
 
     const user = await newUser.save();
-    // const token = jwt.sign(
-    //   { name: user.name, id: user._id },
-    //   process.env.JWTKEY!,
-    //   { expiresIn: "1h" }
-    // );
+
     return res.status(200).json({ user, message: "User created successfully" });
   } catch (error: any) {
     const error_msg = error as mongoose.Error;

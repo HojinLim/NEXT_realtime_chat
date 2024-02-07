@@ -1,97 +1,83 @@
-// ERROR : 공사중.. ㅎㅎ
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
+import { ServerToClientEvents, ClientToServerEvents } from "../../../typings";
+import { socket } from "../App";
 
-import { ServerToClientEvents, ClientToServerEvents } from "../types/typings";
-import { useNavigate } from "react-router-dom";
+const ChatLobby = () => {
+  const [message, setMessage] = useState("");
+  const [chat, setChat] = useState<string[]>([]);
 
-import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+  socket.on("connect", () => {
+    console.log(socket.id); // 소켓 아이디
 
-import Chat from "../components/Chat";
+    // socket.emit("clientMsg", "si");
+    socket.on("serverMsg", (msg: string) => {
+      console.log(msg);
+      setChat((oldChat) => [...oldChat, msg]);
+    });
+  });
 
-type Props = {};
-
-const ChatLobby = (props: Props) => {
-  // const [socket, setSocket] = useState<Socket<
-  //   ServerToClientEvents,
-  //   ClientToServerEvents
-  // > | null>(null);
-  // const navi = useNavigate();
-  // const [room, setRoom] = useState<string>("");
-  // const [rooms, setRooms] = useState<string[]>([]);
-  // const user = useSelector((state: UserState) => state);
-
+  socket.on("disconnect", () => {
+    console.log(socket.id); // undefined
+  });
   // useEffect(() => {
-  //   const newSocket = io("http://localhost:3000");
-  //   setSocket(newSocket);
+  //   socketRef.current = io("http://localhost:5000");
 
-  //   return () => {
-  //     newSocket.disconnect(); // Disconnect socket when component unmounts
-  //   };
-  // }, [room, rooms]);
-
-  // useEffect(() => {
-  //   if (socket) {
-  //     socket.on("sendRoomLists", (data) => {
-  //       setRooms(data.rooms);
-  //     });
-
-  //     socket.on("notifyEnterRoom", (data) => {
-  //       console.log(`Entered room: ${data.room}`); // 참가한 방 이름 출력
-  //     });
-  //   }
-
-  //   return () => {
-  //     if (socket) {
-  //       socket.off("sendRoomLists");
-  //     }
-  //   };
-  // }, [socket]);
-
-  // const handleSubmit = (event: React.FormEvent) => {
-  //   event.preventDefault();
-
-  //   socket?.emit("createRoom", { room });
-  //   socket?.on("error_roomExist", (data) => {
-  //     toast.error(data.msg);
+  //   socketRef.current.on("serverMsg", (msg: string) => {
+  //     setChat((oldChat) => [...oldChat, msg]);
   //   });
-  // };
-  // //   방 입장 알림
-  // const enterRoom = (room: string) => {
-  //   socket?.emit("notifyEnterRoom", { name: user.name, room });
-  //   navi(`/room/${room}`);
-  // };
+
+  //   return () => {
+  //     socketRef.current?.disconnect();
+  //   };
+  // }, []);
+
+  const sendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    socket.emit("clientMsg", message);
+    setMessage("");
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-200">
-      {/* <button
-        onClick={handleSubmit}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      >
-        만들기
-      </button>
-      <input
-        type="text"
-        value={room}
-        onChange={(e) => setRoom(e.target.value)}
-        className="border border-gray-400 rounded px-2 py-1 mt-4"
-        placeholder="Enter room name"
-      />
-      <h2 className="text-2xl font-bold mt-4">방 목록</h2>
-      <div className="flex">
-        {rooms?.map((room) => (
-          <div
-            onClick={() => enterRoom(room)}
-            key={room}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
-          >
-            {room}
-          </div>
+    <>
+      {/* <SendMessageForm /> */}
+      <ul id="messages">
+        {chat.map((msg, idx) => (
+          <li key={idx}>{msg}</li>
         ))}
-        <Chat />
+      </ul>
+      <form onSubmit={sendMessage}>
+        <input
+          autoComplete="off"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+        <button>Send</button>
+      </form>
+      {/* <div className="flex space-x-4">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => {
+            console.log("Entering Room A");
+            navi("/room/a");
+          }}
+        >
+          Room A
+        </button>
+        <button
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => console.log("Entering Room B")}
+        >
+          Room B
+        </button>
+        <button
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => console.log("Entering Room C")}
+        >
+          Room C
+        </button>
       </div> */}
-    </div>
+    </>
   );
 };
 
