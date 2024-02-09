@@ -1,20 +1,21 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import { AppDispatch, RootState } from "../redux/store";
 import { useDispatch } from "react-redux";
-import { login } from "../redux/slices/authSlice";
 import { useSelector } from "react-redux";
+import { login } from "../redux/slices/authSlice";
+import { useNavigate } from "react-router-dom";
 
-const LoginModal = ({
-  handleClose,
-  showSignupModal: handleSignUp,
-}: {
-  handleClose: () => void;
-  showSignupModal: () => void;
-}) => {
+type Props = {};
+
+const LoginPage = (props: Props) => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch<AppDispatch>();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const navi = useNavigate();
+  const { user, message, isSuccess } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -31,14 +32,13 @@ const LoginModal = ({
   useEffect(() => {
     if (user) {
       // TODO: 로그인 관련 처리
-      handleClose();
       // navi("/");
     }
-  }, [user]);
+  }, [user, isSuccess]);
 
   return (
-    <div className="modal-btn">
-      <form className="modal-btn" onSubmit={handleLogin}>
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-200">
+      <form className="modal-Container" onSubmit={handleLogin}>
         <input
           type="text"
           value={name}
@@ -60,15 +60,12 @@ const LoginModal = ({
         >
           로그인
         </button>
-        <button
-          className="mt-3 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-          onClick={handleClose}
-        >
+        <button className="mt-3 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
           Close
         </button>
         <div
           className="mt-3 hover:text-blue-700 hover:cursor-pointer text-gray-600 font-bold py-2 px-4"
-          onClick={handleSignUp}
+          onClick={() => navi("/register")}
         >
           회원가입 바로가기
         </div>
@@ -76,4 +73,5 @@ const LoginModal = ({
     </div>
   );
 };
-export default LoginModal;
+
+export default LoginPage;

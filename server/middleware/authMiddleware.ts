@@ -8,6 +8,7 @@ dotenv.config();
 // protect 미들웨어
 const protect = expressAsyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
+
     let token;
     // console.log("header:", req.headers.authorization);
 
@@ -36,7 +37,7 @@ const protect = expressAsyncHandler(
     } else {
       // Check for refresh token
 
-      const refreshToken = localStorage.getItem("refreshToken");
+      const refreshToken = sessionStorage.getItem("refreshToken");
       if (refreshToken) {
         try {
           // Verify refresh token

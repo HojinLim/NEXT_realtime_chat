@@ -1,53 +1,64 @@
 import React, { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { ServerToClientEvents, ClientToServerEvents } from "../../../typings";
+import {
+  ServerToClientEvents,
+  ClientToServerEvents,
+  Message,
+} from "../../../typings";
 import { socket } from "../App";
+import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../redux/store";
+import { useSelector } from "react-redux";
 
 const ChatLobby = () => {
+  const user = useSelector((state: RootState) => state.auth.user);
   const [message, setMessage] = useState("");
-  const [chat, setChat] = useState<string[]>([]);
+  const [chat, setChat] = useState<Message[]>([]);
 
-  socket.on("connect", () => {
-    console.log(socket.id); // 소켓 아이디
+  useEffect(() => {}, []);
 
-    // socket.emit("clientMsg", "si");
-    socket.on("serverMsg", (msg: string) => {
-      console.log(msg);
-      setChat((oldChat) => [...oldChat, msg]);
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("client side socket id: ", socket.id); // 소켓 아이디
+
+      socket.on("serverMsg", (msg: Message) => {
+        console.log(msg);
+
+        setChat((oldChat) => [...oldChat, msg]);
+      });
     });
-  });
 
-  socket.on("disconnect", () => {
-    console.log(socket.id); // undefined
-  });
-  // useEffect(() => {
-  //   socketRef.current = io("http://localhost:5000");
-
-  //   socketRef.current.on("serverMsg", (msg: string) => {
-  //     setChat((oldChat) => [...oldChat, msg]);
-  //   });
-
-  //   return () => {
-  //     socketRef.current?.disconnect();
-  //   };
-  // }, []);
+    socket.on("disconnect", () => {
+      console.log(socket.id); // undefined
+    });
+  }, [socket, chat, message]);
 
   const sendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    socket.emit("clientMsg", message);
+    if (message === "") return;
+    if (!user) return;
+    socket.emit("clientMsg", { message, user: user?.name, room: null });
     setMessage("");
   };
 
   return (
     <>
       {/* <SendMessageForm /> */}
+      <div className="flex-row flex gap-4">
+        <div>state: </div>
+        <div>{socket.connected ? "*connected*" : "disconnected"} </div>
+      </div>
       <ul id="messages">
         {chat.map((msg, idx) => (
-          <li key={idx}>{msg}</li>
+          <div key={idx} className="flex-row flex gap-4">
+            <li>{msg.user}</li>
+            <li>{msg.message}</li>
+          </div>
         ))}
       </ul>
       <form onSubmit={sendMessage}>
         <input
+          className="border-2 border-gray-300 p-2"
           autoComplete="off"
           value={message}
           onChange={(e) => setMessage(e.target.value)}

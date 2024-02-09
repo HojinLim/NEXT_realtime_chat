@@ -1,15 +1,19 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FormData, User } from "../../types/auth";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast, ToastOptions } from "react-toastify";
 import { NavigateFunction } from "react-router-dom";
+import { TOAST_OPTION } from "../../constants/setting";
+
+
+
 
 let user = null;
-if (localStorage.getItem("user") !== "undefined") {
-  user = JSON.parse(localStorage.getItem("user") || "null") as User | null;
+if (sessionStorage.getItem("user") !== "undefined") {
+  user = JSON.parse(sessionStorage.getItem("user") || "null") as User | null;
 }
 
-const token = localStorage.getItem("token");
+const token = sessionStorage.getItem("token");
 if (token) {
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 } else {
@@ -30,6 +34,7 @@ const initialState: AuthState = {
   formData: {
     name: "",
     password: "",
+    gender: ""
   },
   isError: false,
   isSuccess: false,
@@ -38,32 +43,27 @@ const initialState: AuthState = {
 };
 
 const initAuthInfo = () => {
-  localStorage.removeItem("user");
-  localStorage.removeItem("token");
-  localStorage.removeItem("refreshToken");
+  sessionStorage.removeItem("user");
+  sessionStorage.removeItem("token");
+  sessionStorage.removeItem("refreshToken");
   delete axios.defaults.headers.common["Authorization"];
 };
 
 // createAsyncThunk를 사용하여 백엔드에 회원가입 요청을 보내는 비동기 액션을 생성.
 export const register = createAsyncThunk(
   "auth/register",
-  async (formData: FormData, thunkAPI) => {
+  async (args: { formData: FormData, navi: NavigateFunction }, thunkAPI) => {
+
     try {
-      const response = await axios.post("/api/auth/register", formData);
-      toast.success(response.data.message);
-      return thunkAPI.fulfillWithValue(response.data);
+      const response = await axios.post("/api/auth/register", args.formData);
+
+      toast.success(response.data.message, TOAST_OPTION);
+      args.navi("/login");
+      return response.data;
     } catch (error: any) {
-      if (error.response) {
-        // 서버가 응답을 반환한 경우
-        toast.error(error.response.data.error);
-      } else if (error.request) {
-        // 요청이 만들어졌지만, 응답이 없는 경우
-        console.log(error.request);
-      } else {
-        // 요청을 만드는 중에 에러가 발생한 경우
-        console.log("Error", error.message);
-      }
-      return thunkAPI.rejectWithValue(error.response.data);
+
+      toast.error(error.response.data.message, TOAST_OPTION);
+
     }
   }
 );
@@ -71,19 +71,19 @@ export const register = createAsyncThunk(
 // Login user
 export const login = createAsyncThunk(
   "auth/login",
-  async (formData: FormData, thunkAPI) => {
+  async (form: any, thunkAPI) => {
     try {
-      const response = await axios.post("/api/auth/login", formData);
-      toast.success(response.data.success);
+      const response = await axios.post("/api/auth/login", form);
+      toast.success(response.data.message, TOAST_OPTION);
       if (response.data) {
         // user { name: "user", ... }
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        sessionStorage.setItem("user", JSON.stringify(response.data.user));
       }
 
       response.headers["x-auth-token"] &&
-        localStorage.setItem("token", response.headers["x-auth-token"]);
+        sessionStorage.setItem("token", response.headers["x-auth-token"]);
       response.headers["x-refresh-token"] &&
-        localStorage.setItem(
+        sessionStorage.setItem(
           "refreshToken",
           response.headers["x-refresh-token"]
         );
@@ -95,13 +95,7 @@ export const login = createAsyncThunk(
     } catch (error: any) {
       if (error.response) {
         // 서버가 응답을 반환한 경우
-        toast.error(error.response.data.error);
-      } else if (error.request) {
-        // 요청이 만들어졌지만, 응답이 없는 경우
-        console.log(error.request);
-      } else {
-        // 요청을 만드는 중에 에러가 발생한 경우
-        console.log("Error", error.message);
+
       }
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -110,10 +104,12 @@ export const login = createAsyncThunk(
 
 export const logout = createAsyncThunk(
   "auth/logout",
-  async (navi: NavigateFunction) => {
+  async (navi: NavigateFunction, thunkAPI) => {
     initAuthInfo();
     init();
     navi("/");
+
+    toast.success("Logout success", TOAST_OPTION);
   }
 );
 
@@ -131,13 +127,7 @@ export const deleteUser = createAsyncThunk(
     } catch (error: any) {
       if (error.response) {
         // 서버가 응답을 반환한 경우
-        toast.error(error.response.data.error);
-      } else if (error.request) {
-        // 요청이 만들어졌지만, 응답이 없는 경우
-        console.log(error.request);
-      } else {
-        // 요청을 만드는 중에 에러가 발생한 경우
-        console.log("Error", error.message);
+        toast.error(error.response.data.message);
       }
     }
   }
@@ -156,40 +146,45 @@ export const authSlice = createSlice({
       .addCase(register.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(register.fulfilled, (state, action: PayloadAction<FormData>) => {
-        state.formData = action.payload;
+      .addCase(register.fulfilled, (state, action: PayloadAction<any>) => {
+        state.isSuccess = true;
+        // state.isSuccess = false;
       })
-      .addCase(register.rejected, (state, action: PayloadAction<unknown>) => {
+      .addCase(register.rejected, (state) => {
         state.isLoading = false;
         state.isError = true;
-        state.message = action.payload as string;
+
         state.user = null;
       })
       // Login
       .addCase(login.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(login.fulfilled, (state, action: PayloadAction<AuthState>) => {
+      .addCase(login.fulfilled, (state, action: PayloadAction<any>) => {
         state.user = action.payload.user;
         state.formData = action.payload.formData;
         state.isSuccess = true;
+
       })
       .addCase(login.rejected, (state, action: PayloadAction<any>) => {
         state.isLoading = false;
         state.isError = true;
-        state.message = action.payload;
+
         state.user = null;
       })
-      .addCase(logout.fulfilled, (state) => {
+      .addCase(logout.fulfilled, (state, action: PayloadAction<any>) => {
         state.user = null;
+        state.isSuccess = false;
+        state.message = action.payload;
       })
       .addCase(deleteUser.fulfilled, (state) => {
         state.user = null;
+
       })
-      .addCase(deleteUser.rejected, (state, action: PayloadAction<any>) => {
+      .addCase(deleteUser.rejected, (state) => {
         state.isLoading = false;
         state.isError = true;
-        state.message = action.payload;
+
       })
       .addCase(init, (state) => {
         state = initialState;

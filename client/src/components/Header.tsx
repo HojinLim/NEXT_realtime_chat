@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
-  const user = useSelector((state: RootState) => state.auth.user);
+  const { user } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
   const navi = useNavigate();
 
@@ -16,15 +16,25 @@ const Header = () => {
   const goMyPage = () => {
     navi("/mypage");
   };
+
   return (
     <div className="flex justify-between items-center bg-blue-500 p-4 text-center">
       {user! ? (
-        <div
-          className="text-white hover:cursor-pointer hover:text-blue-300 hover:underline"
-          onClick={goMyPage}
-        >
-          Hi, {user?.name}
-        </div>
+        <>
+          <div
+            className="text-white hover:cursor-pointer hover:text-blue-300 hover:underline"
+            onClick={goMyPage}
+          >
+            Hi, {user?.name}
+          </div>
+          <div className="w-16 h-16 rounded-full overflow-hidden">
+            <img
+              src={user.profileImage}
+              alt="Profile"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </>
       ) : (
         <div className="text-white">No user</div>
       )}

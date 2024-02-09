@@ -1,16 +1,16 @@
 export interface ServerToClientEvents {
-  serverMsg: (msg: string) => void;
+  serverMsg: (msg: Message) => void;
   welcome: (message: Message) => void;
 }
 
 export interface ClientToServerEvents {
-  clientMsg: (msg: string) => void;
+  clientMsg: (msg: Message) => void;
   welcome: (message: Message) => void;
 }
 
 export interface Message {
-  type: string;
+  // type: string;
   user: string;
   message: string;
-  room: string;
+  room: string?;
 }
