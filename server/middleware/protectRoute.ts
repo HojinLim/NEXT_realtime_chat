@@ -12,12 +12,12 @@ const protectRoute = async (req: Request, res: Response, next: NextFunction) => 
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-        console.log('decoded: ', decoded)
+        // console.log('decoded: ', decoded)
         if (!decoded) {
             return res.status(401).json({ error: "Unauthorized - Invalid Token" });
         }
 
-        const user = await User.findById((decoded as jwt.JwtPayload).userId as jwt.JwtPayload).select("-password");
+        const user = await User.findById((decoded as jwt.JwtPayload).userId).select("-password");
         // const user = await User.findById(decoded.userId).select("-password");
 
 
