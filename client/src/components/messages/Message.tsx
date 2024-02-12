@@ -5,7 +5,6 @@ import { RootState } from "../../redux/store";
 
 const Message = ({ message }: any) => {
   const { authUser } = useAuthContext();
-  //   const { selectedConversation } = useConversation();
   const { selectedConversation } = useSelector(
     (state: RootState) => state.conversation
   );
@@ -32,7 +31,7 @@ const Message = ({ message }: any) => {
       >
         {message.message}
       </div>
-      <div className="chat-footer opacity-50 text-xs flex gap-1 items-center">
+      <div className="chat-footer opacity-50 text-xs flex gap-1 items-center text-cyan-100">
         {formattedTime}
       </div>
     </div>

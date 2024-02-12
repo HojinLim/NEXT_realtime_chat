@@ -27,6 +27,7 @@ const useLogin = () => {
       }
 
       localStorage.setItem("user", JSON.stringify(data));
+      toast.success('Login Success!', TOAST_OPTION);
       setAuthUser(data);
     } catch (error: any) {
       toast.error(error.response.data.error, TOAST_OPTION);

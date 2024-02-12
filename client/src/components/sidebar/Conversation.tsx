@@ -3,12 +3,15 @@ import { useSocketContext } from "../../context/SocketContext";
 import { AppDispatch, RootState } from "../../redux/store";
 import { useDispatch } from "react-redux";
 import { setSelectedConversation } from "../../redux/slices/conversationSlice";
+import { useAuthContext } from "../../context/AuthContext";
 
 const Conversation = ({ conversation, lastIdx, emoji }: any) => {
   const dispatch = useDispatch<AppDispatch>();
   const { selectedConversation } = useSelector(
     (state: RootState) => state.conversation
   );
+  const { authUser } = useAuthContext();
+
   const isSelected = selectedConversation?._id === conversation._id;
   const { onlineUsers } = useSocketContext();
   const isOnline = onlineUsers.includes(conversation._id);
@@ -29,7 +32,11 @@ const Conversation = ({ conversation, lastIdx, emoji }: any) => {
 
         <div className="flex flex-col flex-1">
           <div className="flex gap-3 justify-between">
-            <p className="font-bold text-gray-200">{conversation.fullName}</p>
+            <p className="font-bold text-gray-200">
+              {authUser.username !== conversation.username
+                ? conversation.username
+                : conversation.username + " ( Me😀)"}
+            </p>
             <span className="text-xl">{emoji}</span>
           </div>
         </div>

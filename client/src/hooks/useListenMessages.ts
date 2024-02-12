@@ -11,7 +11,6 @@ import { setMessages } from "../redux/slices/conversationSlice";
 
 const useListenMessages = () => {
     const { socket } = useSocketContext();
-    // const { messages, setMessages } = useConversation();
     const dispatch = useDispatch<AppDispatch>();
     const { messages } = useSelector((state: RootState) => state.conversation);
 

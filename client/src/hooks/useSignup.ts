@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { TOAST_OPTION } from "../constants/setting";
+import { useNavigate } from "react-router-dom";
 
 export interface SignupProps {
   username: string;
@@ -12,6 +13,7 @@ export interface SignupProps {
 
 const useSignup = () => {
   const [loading, setLoading] = useState(false);
+  const navi = useNavigate();
 
   const signup = async ({
     username,
@@ -42,6 +44,7 @@ const useSignup = () => {
       }
       toast.success("Register Success!", TOAST_OPTION);
       localStorage.setItem("user", JSON.stringify(data));
+      navi('/login')
     } catch (error: any) {
       toast.error(error.response.data.error, TOAST_OPTION);
     } finally {

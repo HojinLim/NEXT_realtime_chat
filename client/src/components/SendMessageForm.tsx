@@ -1,5 +1,6 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import io from "socket.io-client";
+
+import React, { FormEvent, useState } from "react";
+
 
 // const URL = "http://localhost:3000";
 // const socket = io(URL);
@@ -9,6 +10,7 @@ const SendMessageForm = () => {
     e.preventDefault();
     console.log("submit");
   };
+
   return (
     <div>
       <form onSubmit={onSubmit} className="flex items-center">
