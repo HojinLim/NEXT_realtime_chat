@@ -9,11 +9,14 @@
     "start": "node server/server.ts",
     "server": "nodemon server/server.ts --ignore client",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "pm2": "tsc && pm2 start server/server.js --watch"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.0.3",
+    "ts-node": "^10.9.2"
   }
 }
