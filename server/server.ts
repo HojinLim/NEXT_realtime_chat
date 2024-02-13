@@ -13,8 +13,6 @@ import connectToMongoDB from "./db/connectToMongoDB";
 
 const PORT = process.env.PORT || 5000;
 
-// const __dirname = path.resolve();
-
 dotenv.config();
 
 app.use(express.json()); // to parse the incoming requests with JSON payloads (from req.body)
@@ -24,10 +22,11 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes);
 
-app.use(express.static(path.join(__dirname, "../client/dist")));
+app.use(express.static(path.join(__dirname, "../client/build")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+  // res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });
 
 server.listen(PORT, () => {

@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "server/server.ts",
+  "type": "module",
+  "homepage": ".",
   "scripts": {
     "start": "node server/server.ts",
     "server": "nodemon server/server.ts --ignore client",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
-  "type": "module",
   "author": "",
   "license": "ISC",
   "dependencies": {

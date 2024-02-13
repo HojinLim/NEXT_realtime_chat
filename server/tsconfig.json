@@ -7,7 +7,8 @@
     "strict": true,
     "skipLibCheck": true,
     "outDir": "./dist",
-    "moduleResolution": "node" // 추가된 줄
+    "moduleResolution": "node" ,
+    "preserveValueImports": false
   },
   "include": ["**/*.ts", "../client/setupProxy.ts", "socket/socket.ts"],
   "exclude": ["node_modules"]

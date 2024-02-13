@@ -8,6 +8,7 @@
   },
   "author": "",
   "license": "ISC",
+  "homepage": ".",
   "dependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.6",
