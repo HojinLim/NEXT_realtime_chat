@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "server/server.js",
-  "type": "module",
+  "type": "commonjs",
   "homepage": ".",
   "scripts": {
     "start": "node server/server.js",
-    "server": "nodemon server/server.ts --ignore client",
+    "server": "nodemon server/server.js --ignore client",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "pm2": "pm2 start server/server.js --watch"

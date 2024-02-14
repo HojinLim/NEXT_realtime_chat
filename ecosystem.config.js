@@ -1,8 +1,11 @@
+
+
 module.exports = {
-  apps : [{
-    name   : "app1",
-    script : "./server/server.ts",
-	  interpreter: 'node',
-	    interpreter_args: '--import tsx',
-  }]
-}
+	  apps: [{
+		      name: 'my-server',
+		      script: 'server/server.js',
+		      watch: true,
+		      ignore_watch: ["node_modules", "client"]
+		    }]
+};
+
