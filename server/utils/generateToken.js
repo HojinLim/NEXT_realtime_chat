@@ -13,4 +13,4 @@ const generateTokenAndSetCookie = (userId, res) => {
   });
 };
 
-export default generateTokenAndSetCookie;
+module.exports = generateTokenAndSetCookie;
