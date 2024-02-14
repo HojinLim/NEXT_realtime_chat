@@ -2,21 +2,26 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "server/server.ts",
+  "main": "server/server.js",
   "type": "module",
   "homepage": ".",
   "scripts": {
-    "start": "node server/server.ts",
+    "start": "node server/server.js",
     "server": "nodemon server/server.ts --ignore client",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "pm2": "tsc && pm2 start server/server.js --watch"
+    "pm2": "pm2 start server/server.js --watch"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "concurrently": "^8.2.2",
+    "forever": "^4.0.3",
     "nodemon": "^3.0.3",
     "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "pm2": "^5.3.1"
   }
 }
