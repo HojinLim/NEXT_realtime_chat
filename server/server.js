@@ -1,14 +1,14 @@
-import path from "path";
-import express from "express";
-import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
+const path = require("path");
+const express = require("express");
+const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
 
-import authRoutes from "./routes/auth.routes.js";
-import messageRoutes from "./routes/message.routes.js";
-import userRoutes from "./routes/user.routes.js";
+const authRoutes = require("./routes/auth.routes");
+const messageRoutes = require("./routes/message.routes");
+const userRoutes = require("./routes/user.routes");
 
-import connectToMongoDB from "./db/connectToMongoDB.js";
-import { app, server } from "./socket/socket.js";
+const connectToMongoDB = require("./db/connectToMongoDB");
+const { app, server } = require("./socket/socket");
 
 const PORT = process.env.PORT || 5000;
 

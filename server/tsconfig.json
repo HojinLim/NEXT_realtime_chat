@@ -7,7 +7,7 @@
     "strict": true,
     "skipLibCheck": true,
     "outDir": "./dist",
-    "moduleResolution": "node" ,
+    "moduleResolution": "node",
     "preserveValueImports": false
   },
   "include": ["**/*.ts", "../client/setupProxy.ts", "socket/socket.ts"],

@@ -1,6 +1,6 @@
-import express from "express";
-import protectRoute from "../middleware/protectRoute.js";
-import { getUsersForSidebar } from "../controllers/user.controller.js";
+const express = require("express");
+const protectRoute = require("../middleware/protectRoute.js");
+const { getUsersForSidebar } = require("../controllers/user.controller.js");
 
 const router = express.Router();
 
