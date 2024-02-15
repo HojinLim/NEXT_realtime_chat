@@ -1,6 +1,6 @@
 # ``Public repo 배포`` :aerial_tramway:
 
-> 공부 목적으로 public repo에 등록된 프로젝트 리팩토링 및 배포  <br/>
+> 공부 목적으로 public repo에 프로젝트 배포  <br/>
 
 > AWS ec2 배포 (http://lets-chat.store)  <br/>
 
