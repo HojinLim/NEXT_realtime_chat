@@ -10,7 +10,7 @@
 
 
 
-<img src="https://github.com/HojinLim/Socket_io_realtime_chat/assets/69897998/319c8936-e3b1-4922-97c2-f149774329de" width="900" height="550">
+<img src="https://github.com/HojinLim/Socket_io_realtime_chat/assets/69897998/319c8936-e3b1-4922-97c2-f149774329de" width="900" height="600">
 
 
 ***
