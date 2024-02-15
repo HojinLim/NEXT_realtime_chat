@@ -1,10 +1,10 @@
-# ``Socket io public repo 리팩토링`` :aerial_tramway:
+# ``Public repo 배포`` :aerial_tramway:
 
 > 공부 목적으로 public repo에 등록된 프로젝트 리팩토링 및 배포  <br/>
 
-
 > AWS ec2 배포 (http://lets-chat.store)  <br/>
 
+> Socket io 공부
 
 > public repo: https://github.com/burakorkmez/mern-chat-app
 
