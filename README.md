@@ -6,7 +6,7 @@
 
 > Socket io 공부
 
-> public repo: https://github.com/burakorkmez/mern-chat-app
+> public repo 링크 : https://github.com/burakorkmez/mern-chat-app
 
 
 
