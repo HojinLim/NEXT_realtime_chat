@@ -1,9 +1,5 @@
-
 import React, { FormEvent, useState } from "react";
 
-
-// const URL = "http://localhost:3000";
-// const socket = io(URL);
 const SendMessageForm = () => {
   const [message, setMessage] = useState("");
   const onSubmit = (e: FormEvent) => {
